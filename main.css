@@ -1,0 +1,674 @@
+/* Import custom monospace font from CDN for technical aesthetic */
+@import url("https://fonts.cdnfonts.com/css/thegoodmonolith");
+
+/* CSS Custom Properties for consistent theming throughout the application */
+:root {
+  --bg-color: #12100f;
+  --grid-color: rgba(255, 240, 230, 0.05);
+  --text-primary: #f3ede9;
+  --text-secondary: #c2b8b2;
+  --text-highlight: #ff4e42;
+  --accent-primary: #ff4e42;
+  --accent-secondary: #c2362f;
+  --accent-tertiary: #ffb3ab;
+  --panel-bg: rgba(30, 26, 24, 0.7);
+  --panel-border: rgba(255, 78, 66, 0.3);
+  --panel-highlight: rgba(255, 78, 66, 0.1);
+  --scanner-line: rgba(255, 78, 66, 0.7);
+}
+
+/* Global reset for consistent rendering across browsers */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body styling with full-screen setup and technical font */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: "TheGoodMonolith", monospace;
+  overflow: hidden;
+  height: 100vh;
+  text-transform: uppercase;
+  font-size: 1rem;
+}
+
+/* Ensure all interactive elements inherit the technical font */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Space background image with subtle opacity for atmospheric depth */
+.space-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://assets.codepen.io/7558/space-bg-002.jpg");
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+/* Three.js container with grab cursor for interactive 3D scene */
+#three-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: grab;
+}
+
+#three-container:active {
+  cursor: grabbing;
+}
+
+/* Main interface container with proper layering */
+.interface-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Grid overlay for sci-fi interface aesthetic */
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      to right,
+      var(--grid-color) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header with system information display */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.25rem;
+}
+
+.header-item {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Central scanner frame with corner brackets */
+.scanner-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  border: 1px solid var(--accent-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+/* Scanner frame corner elements for technical UI appearance */
+.scanner-frame::before,
+.scanner-frame::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--accent-primary);
+  border-style: solid;
+}
+
+.scanner-frame::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+}
+
+.scanner-frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+/* Individual corner bracket styling */
+.scanner-frame .corner-tl {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 20px;
+  height: 20px;
+  border-top: 2px solid var(--accent-primary);
+  border-left: 2px solid var(--accent-primary);
+}
+
+.scanner-frame .corner-tr {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 20px;
+  height: 20px;
+  border-top: 2px solid var(--accent-primary);
+  border-right: 2px solid var(--accent-primary);
+}
+
+.scanner-frame .corner-bl {
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  width: 20px;
+  height: 20px;
+  border-bottom: 2px solid var(--accent-primary);
+  border-left: 2px solid var(--accent-primary);
+}
+
+.scanner-frame .corner-br {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 20px;
+  height: 20px;
+  border-bottom: 2px solid var(--accent-primary);
+  border-right: 2px solid var(--accent-primary);
+}
+
+/* Technical identifier labels for scanner frame */
+.scanner-id {
+  position: absolute;
+  bottom: -30px;
+  left: 0;
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+}
+
+.scanner-id-right {
+  position: absolute;
+  bottom: -30px;
+  right: 0;
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+}
+
+/* Animated scanning line effect */
+.scanner-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: var(--scanner-line);
+  top: 0;
+  box-shadow: 0 0 10px var(--accent-primary);
+  animation: scan 4s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* Data panel container styling */
+.data-panels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Individual data panel with glass morphism effect */
+.data-panel {
+  width: 300px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 5px;
+  padding: 0.9375rem;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+/* Data panel title with status indicator */
+.data-panel-title {
+  font-size: 0.875rem;
+  color: var(--accent-primary);
+  margin-bottom: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Data readouts section */
+.data-readouts {
+  margin-top: 0.625rem;
+}
+
+/* Individual data row with label-value pairs */
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.3125rem;
+  font-size: 0.75rem;
+}
+
+.data-label {
+  color: var(--text-secondary);
+}
+
+.data-value {
+  color: var(--text-primary);
+}
+
+/* Horizontal progress bar for stability metrics */
+.data-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0.625rem 0;
+  position: relative;
+  border-radius: 3px;
+}
+
+.data-bar-fill {
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: 3px;
+  transition: width 0.5s;
+}
+
+/* Waveform visualization container */
+.waveform {
+  width: 100%;
+  height: 50px;
+  margin: 0.625rem 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.waveform-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Control panel for simulation parameters */
+.control-panel {
+  width: 300px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 5px;
+  padding: 0.9375rem;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.control-panel h3 {
+  font-size: 0.875rem;
+  color: var(--accent-primary);
+  margin-bottom: 0.9375rem;
+}
+
+/* Control group organization */
+.control-group {
+  margin-bottom: 0.9375rem;
+}
+
+/* Control row with label and current value */
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.control-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.control-value {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+}
+
+/* Slider input container */
+.slider-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom styled range slider */
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  border-radius: 3px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+}
+
+/* Button container and styling */
+.buttons {
+  display: flex;
+  gap: 0.625rem;
+  margin-top: 0.9375rem;
+}
+
+.btn {
+  flex: 1;
+  padding: 0.5rem 0;
+  background: var(--panel-highlight);
+  border: 1px solid var(--panel-border);
+  color: var(--accent-primary);
+  font-size: 0.75rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: var(--panel-border);
+}
+
+/* Terminal panel for system messages */
+.terminal-panel {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  width: 500px;
+  height: 150px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 5px;
+  overflow: hidden;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* Terminal header with status indicator */
+.terminal-header {
+  padding: 0.5rem 0.625rem;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 0.875rem;
+  color: var(--accent-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Panel header with drag handle */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  margin-bottom: 1rem;
+}
+
+/* Terminal content area with scrolling */
+.terminal-content {
+  padding: 0.625rem;
+  height: calc(100% - 31px);
+  overflow-y: auto;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Terminal line styles for different message types */
+.terminal-line {
+  margin-bottom: 0.3125rem;
+}
+
+.command-line {
+  color: white;
+}
+
+.regular-line {
+  color: var(--text-highlight);
+}
+
+/* Typing indicator with blinking cursor */
+.typing {
+  position: relative;
+}
+
+.typing::after {
+  content: "|";
+  position: absolute;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Loading overlay with preloader animation */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.5s;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  padding: 1.25rem;
+}
+
+.preloader-canvas-container {
+  width: 180px;
+  height: 180px;
+  position: relative;
+}
+
+.preloader-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.loading-text {
+  margin-top: 1.25rem;
+  text-align: center;
+  color: var(--accent-primary);
+  letter-spacing: 2px;
+  font-size: 0.875rem;
+}
+
+/* Notification system for user feedback */
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  padding: 0.625rem 1.25rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 100;
+}
+
+/* Drag handle for moveable panels */
+.drag-handle {
+  cursor: move;
+  width: auto;
+  height: 100%;
+  color: var(--accent-primary);
+}
+
+/* Particle trail effects */
+.particle-trail {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.5s;
+}
+
+/* Circular wind flow visualizer */
+.circular-visualizer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  height: 450px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.circular-visualizer canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Atmospheric wave visualization */
+.audio-wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(255, 78, 66, 0.1);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.audio-wave::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 78, 66, 0.05);
+  animation: pulse 4s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+  }
+  50% {
+    width: 120%;
+    height: 120%;
+    opacity: 0;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+  }
+}
+
+/* Spectrum analyzer panel */
+.spectrum-analyzer {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 400px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 5px;
+  overflow: hidden;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.spectrum-header {
+  padding: 0.5rem 0.625rem;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 0.875rem;
+  color: var(--accent-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spectrum-content {
+  padding: 0.625rem;
+  position: relative;
+}
+
+.spectrum-canvas {
+  width: 100%;
+  height: 120px;
+  display: block;
+}
+
+/* Floating particle system container */
+.floating-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
